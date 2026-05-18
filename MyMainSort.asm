@@ -92,7 +92,6 @@ ISR:
 		wend
 		jsr write_few
 
-		jsr write_in_output_device
 	
 	addsp 3
 	rti
@@ -109,14 +108,15 @@ update_lb:
 			inc r1
 			inc r0
 	wend
-	rts
+		rts
 # write updated lb in 0x00
 # r1 records counter
 # r0 pointers to final lb
 # r3 counter of values in records
 # r2 addr to write new lb to
 write_one:
-
+	ldi r3, data
+	
 	ld r0, r0
 
 	ldi r1, 0
@@ -126,7 +126,6 @@ write_one:
 		stays ne
 			ld r0, r2
 			st r3, r2
-			inc r3
 			inc r1
 			inc r0	
 		wend
@@ -136,7 +135,6 @@ write_few:
 	ldi r0, res
 	ldc r0, r0
 	ldi r1, 0	
-	ldi r3, 0
 	push r0
 	push r1
 	
@@ -156,19 +154,7 @@ write_few:
 	pop r0	
 	rts
 
-write_in_output_device:
-	ldi r0, data
-	ldi r2, 0
-		
-	while
-		ldi r1, 54
-		cmp r2, r1			
-	stays ne
-		ld r2, r3
-		st r0, r3
-		inc r2
-	wend
-	rts
+
 
 lb: dc 48
 new: dc 0x60
